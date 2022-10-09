@@ -12,7 +12,7 @@ const token = process.env.WHATSAPP_TOKEN;
 
 // Starting app
 const app = express();
-app.listen(port, () => `Server started at port ${port}`);
+app.listen(port, () => console.log(`Server started at port ${port}`));
 
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -74,7 +74,9 @@ app.post("/webhook", (req, res) => {
 		) {
 			let phone_number_id =
 				req.body.entry[0].changes[0].value.metadata.phone_number_id;
-			let from = req.body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
+			let from = brazilPhoneFormatter(
+				req.body.entry[0].changes[0].value.messages[0].from
+			); // extract the phone number from the webhook payload
 			let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
 			axios({
 				method: "POST", // Required, HTTP method, a string, e.g. POST, GET
