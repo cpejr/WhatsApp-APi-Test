@@ -56,7 +56,7 @@ app.post("/webhook", (req, res) => {
 		headers: { "Content-Type": "application/json" },
 	});
 
-	res.sendStatus(200);
+	return res.sendStatus(200);
 });
 
 export default app;
