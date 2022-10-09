@@ -43,20 +43,20 @@ app.post("/webhook", (req, res) => {
 	const from = brazilPhoneFormatter(messages[0].from);
 	const msg_body = messages[0].text.body;
 
-	axios({
-		method: "POST",
-		url:
-			"https://graph.facebook.com/v12.0/" +
-			phone_number_id +
-			"/messages?access_token=" +
-			token,
-		data: {
-			messaging_product: "whatsapp",
-			to: from,
-			text: { body: "Ack: " + msg_body },
-		},
-		headers: { "Content-Type": "application/json" },
-	});
+	// axios({
+	// 	method: "POST",
+	// 	url:
+	// 		"https://graph.facebook.com/v12.0/" +
+	// 		phone_number_id +
+	// 		"/messages?access_token=" +
+	// 		token,
+	// 	data: {
+	// 		messaging_product: "whatsapp",
+	// 		to: from,
+	// 		text: { body: "Ack: " + msg_body },
+	// 	},
+	// 	headers: { "Content-Type": "application/json" },
+	// });
 });
 
 export default app;
