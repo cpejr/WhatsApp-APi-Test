@@ -41,7 +41,6 @@ app.post("/webhook", (req, res) => {
 	if (!(metadata && messages)) return res.sendStatus(404);
 
 	const phone_number_id = brazilPhoneFormatter(metadata.phone_number_id);
-	console.log({ phone_number_id });
 	const from = messages[0].from;
 	const msg_body = messages[0].text.body;
 
