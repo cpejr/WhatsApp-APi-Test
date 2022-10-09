@@ -13,7 +13,7 @@ app.use(express.json());
 // 	console.error(err.message, err.stack);
 // 	return res.status(status).json({ message: err.message });
 // });
-app.use(morgan(":url :method :status :response-time ms"));
+// app.use(morgan(":url :method :status :response-time ms"));
 
 // Routes
 app.get("/", async (req, res, next) => {
@@ -31,33 +31,33 @@ app.get("/webhook", (req, res) => {
 
 	return res.status(200).send(challenge);
 });
-app.post("/webhook", (req, res) => {
-	const token = process.env.WHATSAPP_TOKEN;
+// app.post("/webhook", (req, res) => {
+// 	const token = process.env.WHATSAPP_TOKEN;
 
-	const metadata = req.body?.entry?.[0]?.changes?.[0]?.value?.metadata;
-	const messages = req.body?.entry?.[0]?.changes?.[0]?.value?.messages;
+// 	const metadata = req.body?.entry?.[0]?.changes?.[0]?.value?.metadata;
+// 	const messages = req.body?.entry?.[0]?.changes?.[0]?.value?.messages;
 
-	if (!(metadata && messages)) return res.sendStatus(404);
+// 	if (!(metadata && messages)) return res.sendStatus(404);
 
-	console.log("Chegou aqui 1");
-	const phone_number_id = metadata.phone_number_id;
-	const from = messages[0].from;
-	const msg_body = messages[0].text.body;
-	console.log({ phone_number_id, from, msg_body });
-	axios({
-		method: "POST",
-		url:
-			"https://graph.facebook.com/v12.0/" +
-			phone_number_id +
-			"/messages?access_token=" +
-			token,
-		data: {
-			messaging_product: "whatsapp",
-			to: from,
-			text: { body: "Ack: " + msg_body },
-		},
-		headers: { "Content-Type": "application/json" },
-	});
-});
+// 	console.log("Chegou aqui 1");
+// 	const phone_number_id = metadata.phone_number_id;
+// 	const from = messages[0].from;
+// 	const msg_body = messages[0].text.body;
+// 	console.log({ phone_number_id, from, msg_body });
+// 	// axios({
+// 	// 	method: "POST",
+// 	// 	url:
+// 	// 		"https://graph.facebook.com/v12.0/" +
+// 	// 		phone_number_id +
+// 	// 		"/messages?access_token=" +
+// 	// 		token,
+// 	// 	data: {
+// 	// 		messaging_product: "whatsapp",
+// 	// 		to: from,
+// 	// 		text: { body: "Ack: " + msg_body },
+// 	// 	},
+// 	// 	headers: { "Content-Type": "application/json" },
+// 	// });
+// });
 
 export default app;
