@@ -34,7 +34,6 @@ app.get("/webhook", (req, res) => {
 });
 app.post("/webhook", (req, res) => {
 	const token = process.env.WHATSAPP_TOKEN;
-	console.log(req.body);
 	const metadata = req.body?.entry?.[0]?.changes?.[0]?.value?.metadata;
 	const messages = req.body?.entry?.[0]?.changes?.[0]?.value?.messages;
 
@@ -44,20 +43,26 @@ app.post("/webhook", (req, res) => {
 	const from = messages[0].from;
 	const msg_body = messages[0].text.body;
 
-	axios({
-		method: "POST",
-		url:
-			"https://graph.facebook.com/v12.0/" +
-			phone_number_id +
-			"/messages?access_token=" +
-			token,
-		data: {
-			messaging_product: "whatsapp",
-			to: from,
-			text: { body: "Ack: " + msg_body },
-		},
-		headers: { "Content-Type": "application/json" },
+	console.log({
+		phone_number_id,
+		from,
+		msg_body,
 	});
+
+	// axios({
+	// 	method: "POST",
+	// 	url:
+	// 		"https://graph.facebook.com/v12.0/" +
+	// 		phone_number_id +
+	// 		"/messages?access_token=" +
+	// 		token,
+	// 	data: {
+	// 		messaging_product: "whatsapp",
+	// 		to: from,
+	// 		text: { body: "Ack: " + msg_body },
+	// 	},
+	// 	headers: { "Content-Type": "application/json" },
+	// });
 });
 
 export default app;
