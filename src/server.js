@@ -32,33 +32,39 @@ app.get("/webhook", (req, res) => {
 	return res.status(200).send(challenge);
 });
 app.post("/webhook", (req, res) => {
-	if (!req.body.object) return res.sendStatus(404);
-
-	const metadata = req.body?.entry?.[0]?.changes?.[0]?.value?.metadata;
-	const messages = req.body?.entry?.[0]?.changes?.[0]?.value?.messages;
-
-	if (!(metadata && messages)) return res.sendStatus(500);
-
-	const phone_number_id = metadata.phone_number_id;
-	const from = brazilPhoneFormatter(messages[0].from);
-	const msg_body = messages[0].text.body;
-
-	axios({
-		method: "POST",
-		url:
-			"https://graph.facebook.com/v12.0/" +
-			phone_number_id +
-			"/messages?access_token=" +
-			token,
-		data: {
-			messaging_product: "whatsapp",
-			to: from,
-			text: { body: "Ack: " + msg_body },
-		},
-		headers: { "Content-Type": "application/json" },
-	});
-
-	return res.sendStatus(200);
+	if (req.body.object) {
+		if (
+			req.body.entry &&
+			req.body.entry[0].changes &&
+			req.body.entry[0].changes[0] &&
+			req.body.entry[0].changes[0].value.messages &&
+			req.body.entry[0].changes[0].value.messages[0]
+		) {
+			const phone_number_id =
+				req.body.entry[0].changes[0].value.metadata.phone_number_id;
+			const from = brazilPhoneFormatter(
+				req.body.entry[0].changes[0].value.messages[0].from
+			);
+			const msg_body = req.body.entry[0].changes[0].value.messages[0].text.body;
+			axios({
+				method: "POST",
+				url:
+					"https://graph.facebook.com/v12.0/" +
+					phone_number_id +
+					"/messages?access_token=" +
+					token,
+				data: {
+					messaging_product: "whatsapp",
+					to: from,
+					text: { body: "Ack: " + msg_body },
+				},
+				headers: { "Content-Type": "application/json" },
+			});
+		}
+		res.sendStatus(200);
+	} else {
+		res.sendStatus(404);
+	}
 });
 
 export default app;
