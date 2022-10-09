@@ -32,31 +32,31 @@ app.get("/webhook", (req, res) => {
 
 	return res.status(200).send(challenge);
 });
-app.post("/webhook", (req, res) => {
-	const token = process.env.WHATSAPP_TOKEN;
-	const metadata = req.body?.entry?.[0]?.changes?.[0]?.value?.metadata;
-	const messages = req.body?.entry?.[0]?.changes?.[0]?.value?.messages;
+// app.post("/webhook", (req, res) => {
+// 	const token = process.env.WHATSAPP_TOKEN;
+// 	const metadata = req.body?.entry?.[0]?.changes?.[0]?.value?.metadata;
+// 	const messages = req.body?.entry?.[0]?.changes?.[0]?.value?.messages;
 
-	if (!(metadata && messages)) return res.sendStatus(404);
+// 	if (!(metadata && messages)) return res.sendStatus(404);
 
-	const phone_number_id = metadata.phone_number_id;
-	const from = brazilPhoneFormatter(messages[0].from);
-	const msg_body = messages[0].text.body;
+// 	const phone_number_id = metadata.phone_number_id;
+// 	const from = brazilPhoneFormatter(messages[0].from);
+// 	const msg_body = messages[0].text.body;
 
-	// axios({
-	// 	method: "POST",
-	// 	url:
-	// 		"https://graph.facebook.com/v12.0/" +
-	// 		phone_number_id +
-	// 		"/messages?access_token=" +
-	// 		token,
-	// 	data: {
-	// 		messaging_product: "whatsapp",
-	// 		to: from,
-	// 		text: { body: "Ack: " + msg_body },
-	// 	},
-	// 	headers: { "Content-Type": "application/json" },
-	// });
-});
+// 	// axios({
+// 	// 	method: "POST",
+// 	// 	url:
+// 	// 		"https://graph.facebook.com/v12.0/" +
+// 	// 		phone_number_id +
+// 	// 		"/messages?access_token=" +
+// 	// 		token,
+// 	// 	data: {
+// 	// 		messaging_product: "whatsapp",
+// 	// 		to: from,
+// 	// 		text: { body: "Ack: " + msg_body },
+// 	// 	},
+// 	// 	headers: { "Content-Type": "application/json" },
+// 	// });
+// });
 
 export default app;
