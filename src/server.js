@@ -31,73 +31,32 @@ app.get("/webhook", (req, res) => {
 
 	return res.status(200).send(challenge);
 });
-// app.post("/webhook", (req, res) => {
-// 	const metadata = req.body?.entry?.[0]?.changes?.[0]?.value?.metadata;
-// 	const messages = req.body?.entry?.[0]?.changes?.[0]?.value?.messages;
-
-// 	if (!(metadata && messages)) return res.sendStatus(404);
-
-// 	const phone_number_id = metadata.phone_number_id;
-// 	const from = brazilPhoneFormatter(messages[0].from);
-// 	const msg_body = messages[0].text.body;
-
-// 	axios({
-// 		method: "POST",
-// 		url:
-// 			"https://graph.facebook.com/v12.0/" +
-// 			phone_number_id +
-// 			"/messages?access_token=" +
-// 			token,
-// 		data: {
-// 			messaging_product: "whatsapp",
-// 			to: from,
-// 			text: { body: "Ack: " + msg_body },
-// 		},
-// 		headers: { "Content-Type": "application/json" },
-// 	});
-// });
 app.post("/webhook", (req, res) => {
-	// Parse the request body from the POST
-	let body = req.body;
+	const metadata = req.body?.entry?.[0]?.changes?.[0]?.value?.metadata;
+	const messages = req.body?.entry?.[0]?.changes?.[0]?.value?.messages;
 
-	// Check the Incoming webhook message
-	console.log(JSON.stringify(req.body, null, 2));
+	if (!(metadata && messages)) return res.sendStatus(404);
 
-	// info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
-	if (req.body.object) {
-		if (
-			req.body.entry &&
-			req.body.entry[0].changes &&
-			req.body.entry[0].changes[0] &&
-			req.body.entry[0].changes[0].value.messages &&
-			req.body.entry[0].changes[0].value.messages[0]
-		) {
-			let phone_number_id =
-				req.body.entry[0].changes[0].value.metadata.phone_number_id;
-			let from = brazilPhoneFormatter(
-				req.body.entry[0].changes[0].value.messages[0].from
-			); // extract the phone number from the webhook payload
-			let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
-			axios({
-				method: "POST", // Required, HTTP method, a string, e.g. POST, GET
-				url:
-					"https://graph.facebook.com/v12.0/" +
-					phone_number_id +
-					"/messages?access_token=" +
-					token,
-				data: {
-					messaging_product: "whatsapp",
-					to: from,
-					text: { body: "Ack: " + msg_body },
-				},
-				headers: { "Content-Type": "application/json" },
-			});
-		}
-		res.sendStatus(200);
-	} else {
-		// Return a '404 Not Found' if event is not from a WhatsApp API
-		res.sendStatus(404);
-	}
+	const phone_number_id = metadata.phone_number_id;
+	const from = brazilPhoneFormatter(messages[0].from);
+	const msg_body = messages[0].text.body;
+
+	axios({
+		method: "POST",
+		url:
+			"https://graph.facebook.com/v12.0/" +
+			phone_number_id +
+			"/messages?access_token=" +
+			token,
+		data: {
+			messaging_product: "whatsapp",
+			to: from,
+			text: { body: "Ack: " + msg_body },
+		},
+		headers: { "Content-Type": "application/json" },
+	});
+
+	res.sendStatus(200);
 });
 
 export default app;
