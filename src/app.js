@@ -39,30 +39,24 @@ app.post("/webhook", (req, res) => {
 
 	if (!(metadata && messages)) return res.sendStatus(404);
 
-	const phone_number_id = brazilPhoneFormatter(metadata.phone_number_id);
-	const from = messages[0].from;
+	const phone_number_id = metadata.phone_number_id;
+	const from = brazilPhoneFormatter(messages[0].from);
 	const msg_body = messages[0].text.body;
 
-	console.log({
-		phone_number_id,
-		from,
-		msg_body,
+	axios({
+		method: "POST",
+		url:
+			"https://graph.facebook.com/v12.0/" +
+			phone_number_id +
+			"/messages?access_token=" +
+			token,
+		data: {
+			messaging_product: "whatsapp",
+			to: from,
+			text: { body: "Ack: " + msg_body },
+		},
+		headers: { "Content-Type": "application/json" },
 	});
-
-	// axios({
-	// 	method: "POST",
-	// 	url:
-	// 		"https://graph.facebook.com/v12.0/" +
-	// 		phone_number_id +
-	// 		"/messages?access_token=" +
-	// 		token,
-	// 	data: {
-	// 		messaging_product: "whatsapp",
-	// 		to: from,
-	// 		text: { body: "Ack: " + msg_body },
-	// 	},
-	// 	headers: { "Content-Type": "application/json" },
-	// });
 });
 
 export default app;
