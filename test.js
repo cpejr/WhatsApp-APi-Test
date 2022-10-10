@@ -3,7 +3,7 @@ import "dotenv/config";
 import axios from "axios";
 
 const apiTest = axios.create({
-	baseURL: "http://localhost:4000",
+	baseURL: "https://cpe-whats-api-test.herokuapp.com",
 });
 
 apiTest.post("send-message", {
