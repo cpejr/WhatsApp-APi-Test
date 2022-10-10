@@ -42,15 +42,18 @@ app.post("/webhook", (req, res, next) => {
 				req.body.entry[0].changes[0].value.messages[0].from
 			);
 			const msg_body = req.body.entry[0].changes[0].value.messages[0].text.body;
-			console.log(`Você mandou: ${msg_body}`);
-			api.post(`${phone_number_id}/messages?access_token=${token}`, {
-				messaging_product: "whatsapp",
-				type: "text",
-				to: from,
-				text: {
-					body: `Você enviou: "${msg_body}"`,
-				},
-			});
+
+			api.post(
+				`${process.env.PHONE_NUMBER_ID}/messages?access_token=${token}`,
+				{
+					messaging_product: "whatsapp",
+					type: "text",
+					to: from,
+					text: {
+						body: `Você enviou: "${msg_body}"`,
+					},
+				}
+			);
 		}
 
 		res.sendStatus(200);
