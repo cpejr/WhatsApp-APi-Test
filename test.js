@@ -4,37 +4,42 @@
 import "dotenv/config";
 import axios from "axios";
 
-const apiTest = axios.create();
+const apiMessages = axios.create({
+	baseURL: process.env.SEND_MESSAGES_URL,
+});
+
+apiMessages.defaults.headers.common[
+	"Authorization"
+] = `Bearer ${process.env.WHATSAPP_TOKEN}`;
+
 try {
-	const text = "TUDO BEM??";
-	await apiTest.post("https://cpe-whats-api-test.herokuapp.com/send-message", {
+	const text = "AAAA";
+	await apiMessages.post("send-message", {
 		to: "5571999258225",
 		type: "text",
 		data: {
-			text: { body: text },
+			body: text,
 		},
 	});
 
 	const name = "João Pedro Lima Pirajá";
-	await apiTest.post("https://cpe-whats-api-test.herokuapp.com/send-message", {
+	await apiMessages.post("send-message", {
 		to: "5571999258225",
 		type: "template",
 		data: {
-			template: {
-				name: "doctor_app",
-				language: { code: "pt_BR" },
-				components: [
-					{
-						type: "body",
-						parameters: [
-							{
-								type: "text",
-								text: name,
-							},
-						],
-					},
-				],
-			},
+			name: "doctor_app",
+			language: { code: "pt_BR" },
+			components: [
+				{
+					type: "body",
+					parameters: [
+						{
+							type: "text",
+							text: name,
+						},
+					],
+				},
+			],
 		},
 	});
 } catch (err) {

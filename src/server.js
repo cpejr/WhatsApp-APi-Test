@@ -60,18 +60,20 @@ app.post("/webhook", async (req, res, next) => {
 		res.sendStatus(404);
 	}
 });
-app.post("/send-message", (req, res, next) => {
+app.post("/send-message", async (req, res, next) => {
 	if (!req.body?.to) return res.sendStatus(400);
 
 	const { phoneNumbeId, to, type, data } = req.body;
+	if (type !== "template" && type !== "text") return res.sendStatus(400);
+
 	const senderPhoneId = phoneNumbeId || process.env.PHONE_NUMBER_ID;
 
 	try {
-		api.post(`${senderPhoneId}/messages?access_token=${token}`, {
+		await api.post(`${senderPhoneId}/messages?access_token=${token}`, {
 			messaging_product: "whatsapp",
-			type,
 			to,
-			...data,
+			type,
+			[type]: data,
 		});
 
 		return res.sendStatus(200);
