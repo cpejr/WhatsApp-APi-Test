@@ -48,7 +48,7 @@ app.post("/webhook", (req, res, next) => {
 				type: "text",
 				to: from,
 				text: {
-					body: { body: "Você mandou: " + msg_body },
+					body: `Você enviou: "${msg_body}"`,
 				},
 			});
 		}
