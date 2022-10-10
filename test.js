@@ -1,14 +1,15 @@
-// import api from "./src/api.js";
 import "dotenv/config";
 import axios from "axios";
 
 const apiTest = axios.create();
 
-apiTest.post("https://cpe-whats-api-test.herokuapp.com/send-message", {
+apiTest.post("http://localhost:4000/send-message", {
 	to: "5571999258225",
-	text: "FUNCIONAAAAA",
+	text: "FUNCIONAAAAA SIIIIIM",
+	isTemplate: true,
 });
 
+// import api from "./src/api.js";
 // const senderPhoneId = process.env.PHONE_NUMBER_ID;
 // const numberToSend = "5571999258225";
 // const token = process.env.WHATSAPP_TOKEN;

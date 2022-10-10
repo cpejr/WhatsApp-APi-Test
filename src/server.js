@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import morgan from "morgan";
-import axios from "axios";
 import brazilPhoneFormatter from "./utils/brazilPhoneFormatter.js";
 import errorHandling from "./utils/errorHandling.js";
 import api from "./api.js";
@@ -43,6 +42,7 @@ app.post("/webhook", (req, res, next) => {
 				req.body.entry[0].changes[0].value.messages[0].from
 			);
 			const msg_body = req.body.entry[0].changes[0].value.messages[0].text.body;
+			console.log({ phone_number_id, from, msg_body });
 			// axios({
 			// 	method: "POST",
 			// 	url:
@@ -66,16 +66,27 @@ app.post("/webhook", (req, res, next) => {
 app.post("/send-message", (req, res, next) => {
 	if (!req.body?.to) return res.sendStatus(400);
 
-	const { phoneNumbeId, to, text } = req.body;
+	const { isTemplate, phoneNumbeId, to, text } = req.body;
 	const senderPhoneId = phoneNumbeId || process.env.PHONE_NUMBER_ID;
+	const opts = isTemplate
+		? {
+				type: "template",
+				template: {
+					name: "hello_world",
+					language: { code: "en_US" },
+				},
+		  }
+		: {
+				type: "text",
+				text: {
+					body: text,
+				},
+		  };
 	try {
 		api.post(`${senderPhoneId}/messages?access_token=${token}`, {
 			messaging_product: "whatsapp",
-			type: "text",
 			to,
-			text: {
-				body: text,
-			},
+			...opts,
 		});
 
 		return res.sendStatus(200);
