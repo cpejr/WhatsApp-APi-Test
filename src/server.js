@@ -42,22 +42,17 @@ app.post("/webhook", (req, res, next) => {
 				req.body.entry[0].changes[0].value.messages[0].from
 			);
 			const msg_body = req.body.entry[0].changes[0].value.messages[0].text.body;
-			console.log({ phone_number_id, from, msg_body });
-			// axios({
-			// 	method: "POST",
-			// 	url:
-			// 		"https://graph.facebook.com/v12.0/" +
-			// 		phone_number_id +
-			// 		"/messages?access_token=" +
-			// 		token,
-			// 	data: {
-			// 		messaging_product: "whatsapp",
-			// 		to: from,
-			// 		text: { body: "Ack: " + msg_body },
-			// 	},
-			// 	headers: { "Content-Type": "application/json" },
-			// });
+
+			api.post(`${phone_number_id}/messages?access_token=${token}`, {
+				messaging_product: "whatsapp",
+				type: "text",
+				to: from,
+				text: {
+					body: { body: `Você mandou: "${msg_body}"` },
+				},
+			});
 		}
+
 		res.sendStatus(200);
 	} else {
 		res.sendStatus(404);

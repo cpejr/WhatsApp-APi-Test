@@ -3,9 +3,9 @@ import axios from "axios";
 
 const apiTest = axios.create();
 
-apiTest.post("http://localhost:4000/send-message", {
+apiTest.post("https://cpe-whats-api-test.herokuapp.com/send-message", {
 	to: "5571999258225",
-	text: "FUNCIONAAAAA SIIIIIM",
+	text: "AAAAAAAAaa",
 	isTemplate: true,
 });
 
