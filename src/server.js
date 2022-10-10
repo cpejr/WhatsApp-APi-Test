@@ -33,7 +33,7 @@ app.get("/webhook", (req, res, next) => {
 
 	return res.status(200).send(challenge);
 });
-app.post("/webhook", (req, res, next) => {
+app.post("/webhook", async (req, res, next) => {
 	if (req.body.object) {
 		if (req.body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0]) {
 			const phone_number_id =
@@ -42,20 +42,19 @@ app.post("/webhook", (req, res, next) => {
 				req.body.entry[0].changes[0].value.messages[0].from
 			);
 			const msg_body = req.body.entry[0].changes[0].value.messages[0].text.body;
-
-			api.post(
-				`${process.env.PHONE_NUMBER_ID}/messages?access_token=${token}`,
-				{
+			try {
+				await api.post(`${phone_number_id}/messages`, {
 					messaging_product: "whatsapp",
 					type: "text",
 					to: from,
 					text: {
 						body: `Você enviou: "${msg_body}"`,
 					},
-				}
-			);
+				});
+			} catch (err) {
+				return next(err);
+			}
 		}
-
 		res.sendStatus(200);
 	} else {
 		res.sendStatus(404);
