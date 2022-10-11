@@ -13,9 +13,11 @@ apiMessages.defaults.headers.common[
 ] = `Bearer ${process.env.WHATSAPP_TOKEN}`;
 
 try {
+	const to = "5531996562404";
+
 	const text = "AAAA";
 	await apiMessages.post("send-message", {
-		to: "5571999258225",
+		to,
 		type: "text",
 		data: {
 			body: text,
@@ -23,7 +25,6 @@ try {
 	});
 
 	// const name = "Mariana";
-	// const to = "5531996562404";
 	// await apiMessages.post("send-message", {
 	// 	to,
 	// 	type: "template",
