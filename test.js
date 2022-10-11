@@ -22,26 +22,27 @@ try {
 		},
 	});
 
-	const name = "João Pedro Lima Pirajá";
-	await apiMessages.post("send-message", {
-		to: "5571999258225",
-		type: "template",
-		data: {
-			name: "doctor_app",
-			language: { code: "pt_BR" },
-			components: [
-				{
-					type: "body",
-					parameters: [
-						{
-							type: "text",
-							text: name,
-						},
-					],
-				},
-			],
-		},
-	});
+	// const name = "Mariana";
+	// const to = "5531996562404";
+	// await apiMessages.post("send-message", {
+	// 	to,
+	// 	type: "template",
+	// 	data: {
+	// 		name: "doctor_app",
+	// 		language: { code: "pt_BR" },
+	// 		components: [
+	// 			{
+	// 				type: "body",
+	// 				parameters: [
+	// 					{
+	// 						type: "text",
+	// 						text: name,
+	// 					},
+	// 				],
+	// 			},
+	// 		],
+	// 	},
+	// });
 } catch (err) {
 	console.log(err.message);
 }
