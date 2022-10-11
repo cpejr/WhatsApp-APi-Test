@@ -13,9 +13,9 @@ apiMessages.defaults.headers.common[
 ] = `Bearer ${process.env.WHATSAPP_TOKEN}`;
 
 try {
-	const to = "5531996562404";
+	const to = "5571999258225";
 
-	const text = "AAAA";
+	const text = "Ola mariana tudo bem?";
 	await apiMessages.post("send-message", {
 		to,
 		type: "text",

@@ -41,7 +41,9 @@ app.post("/webhook", async (req, res, next) => {
 			const from = brazilPhoneFormatter(
 				req.body.entry[0].changes[0].value.messages[0].from
 			);
-			const msg_body = req.body.entry[0].changes[0].value.messages[0].text.body;
+			const msg_body =
+				req.body.entry[0].changes[0].value.messages[0]?.text?.body ||
+				"algo muito estranho";
 			try {
 				await api.post(`${phone_number_id}/messages`, {
 					messaging_product: "whatsapp",
@@ -71,8 +73,8 @@ app.post("/send-message", async (req, res, next) => {
 	try {
 		await api.post(`${senderPhoneId}/messages?access_token=${token}`, {
 			messaging_product: "whatsapp",
-			to,
 			type,
+			to,
 			[type]: data,
 		});
 
