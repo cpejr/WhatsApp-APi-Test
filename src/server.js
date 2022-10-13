@@ -8,7 +8,6 @@ import api from "./api.js";
 // Environment variables
 const port = process.env.PORT || 4000;
 const verifyToken = process.env.VERIFY_TOKEN;
-const token = process.env.WHATSAPP_TOKEN;
 
 // Starting app
 const app = express();
@@ -69,9 +68,9 @@ app.post("/send-message", async (req, res, next) => {
 	if (type !== "template" && type !== "text") return res.sendStatus(400);
 
 	const senderPhoneId = phoneNumbeId || process.env.PHONE_NUMBER_ID;
-
+	console.log(senderPhoneId);
 	try {
-		await api.post(`${senderPhoneId}/messages?access_token=${token}`, {
+		await api.post(`${senderPhoneId}/messages`, {
 			messaging_product: "whatsapp",
 			type,
 			to,

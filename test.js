@@ -13,10 +13,8 @@ apiMessages.defaults.headers.common[
 ] = `Bearer ${process.env.WHATSAPP_TOKEN}`;
 
 try {
-	const to = "5511952319116";
-
-	const text =
-		"OLA NIKOLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
+	const to = "5571999258225";
+	const text = "OLAAAA";
 	await apiMessages.post("send-message", {
 		to,
 		type: "text",
@@ -25,25 +23,25 @@ try {
 		},
 	});
 
-	// const name = "Nikolita";
-	// await apiMessages.post("send-message", {
-	// 	to,
-	// 	type: "template",
-	// 	data: {
-	// 		name: "doctor_app",
-	// 		language: { code: "pt_BR" },
-	// 		components: [
-	// 			{
-	// 				type: "body",
-	// 				parameters: [
-	// 					{
-	// 						type: "text",
-	// 						text: name,
-	// 					},
-	// 				],
-	// 			},
-	// 		],
-	// 	},
+	// 	// const name = "Nikolita";
+	// 	// await apiMessages.post("send-message", {
+	// 	// 	to,
+	// 	// 	type: "template",
+	// 	// 	data: {
+	// 	// 		name: "doctor_app",
+	// 	// 		language: { code: "pt_BR" },
+	// 	// 		components: [
+	// 	// 			{
+	// 	// 				type: "body",
+	// 	// 				parameters: [
+	// 	// 					{
+	// 	// 						type: "text",
+	// 	// 						text: name,
+	// 	// 					},
+	// 	// 				],
+	// 	// 			},
+	// 	// 		],
+	// 	// 	},
 	// });
 } catch (err) {
 	console.log(err.message);
@@ -57,7 +55,7 @@ try {
 // const numberToSend = "5571999258225";
 // const text = "QUALEEE";
 
-// Texto comum
+// // Texto comum
 // api.post(`${senderPhoneId}/messages`, {
 // 	messaging_product: "whatsapp",
 // 	type: "text",
