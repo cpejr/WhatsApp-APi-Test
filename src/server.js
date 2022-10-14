@@ -40,16 +40,17 @@ app.post("/webhook", async (req, res, next) => {
 			const from = brazilPhoneFormatter(
 				req.body.entry[0].changes[0].value.messages[0].from
 			);
-			const msg_body =
-				req.body.entry[0].changes[0].value.messages[0]?.text?.body ||
-				"algo muito estranho";
+			const msg_body = req.body.entry[0].changes[0].value.messages[0]?.text
+				?.body
+				? `Eu sou um robô, eu não vou ser seu amigo e responder normal. Desculpa :(`
+				: "Eu não gosto de gifs ou seja lá o que isso for. Não mande mais :)";
 			try {
 				await api.post(`${phone_number_id}/messages`, {
 					messaging_product: "whatsapp",
 					type: "text",
 					to: from,
 					text: {
-						body: `Eu sou um robô, eu não vou ser seu amigo e responder normal. Desculpa :(`,
+						body: msg_body,
 					},
 				});
 			} catch (err) {
