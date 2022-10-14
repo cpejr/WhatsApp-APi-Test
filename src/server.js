@@ -49,7 +49,7 @@ app.post("/webhook", async (req, res, next) => {
 					type: "text",
 					to: from,
 					text: {
-						body: `Você enviou: "${msg_body}"`,
+						body: `Eu sou um robô, eu não vou ser seu amigo e responder normal. Desculpa :(`,
 					},
 				});
 			} catch (err) {
