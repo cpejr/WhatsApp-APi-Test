@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Envio de mensagens no WhatsApp</title>
+	</head>
+	<body>
+		<form action="/send-message" method="post" id="form">
+      <div id="select-type">
+        <label for="type">Insira o tipo de mensagem</label>
+        <select name="type">
+          <option value="template">Template</option>
+          <option value="text">Texto</option>
+        </select>
+      </div>
+      <div id="input-to">
+        <label for="to">Insira um número de telefone</label>
+        <input type="tel" name="to" pattern="55\d{2}9\d{8}" />
+      </div>
+      <div id="input-text">
+        <label for="text">Insira uma mensagem</label>
+        <textarea name="text" cols="30" rows="5"></textarea>
+      </div>
+      <div id="input-template-name">
+        <label for="template-name">Insira o nome do template</label>
+        <input type="text" name="template-name" value="mensagem_apresentacao">
+      </div>
+      <div id="input-name">
+        <label for="name">Insira o nome da pessoa que receberá a mensagem</label>
+        <input type="text" name="name">
+      </div>
+			<button type="submit">Enviar</button>
+		</form>
+	</body>
+	<script>
+    // Env Variables - Change if needed
+    const WHATSAPP_TOKEN = "EAAGsq0XeScUBAMZBT6VptcX2AoxKi8VbZA5BiGG8JE4isrhd7aVlDhq5WB7Ar6y8lmfuBkVbR9w09edX23fHgnsPhlb9NtCnZBR1ZAUD7cnp2pmCqnrnn5Tmo7rdKxc37ILDV42D4ZC0Dtf6Cnl5ZCBc6nlZBTKFx9GzRLWUXpoGFlJ2eMiWRjr";
+    const PHONE_NUMBER_ID = "107512392145385";
+    const SEND_MESSAGES_URL = "https://cpe-whats-api-test.herokuapp.com";
+    const API_URL = "https://graph.facebook.com/v14.0";
+
+    // Function to make a POST request 
+		async function postData(url = '', data = {}) {
+		  const response = await fetch(url, {
+		    method: 'POST',
+		    credentials: 'same-origin',
+		    mode: "cors",
+		    cache: 'no-cache',
+		    headers: {
+		      'Content-Type': 'application/json',
+		      'Authorization': `Bearer ${WHATSAPP_TOKEN}`
+		    },
+		    body: JSON.stringify(data)
+		  });
+		  return response.json();
+		};
+
+		const form = document.getElementById("form");
+    const selectRequestType = document.querySelector("#select-type select");
+    const inputRequestNameContainer = document.querySelector("#input-name")
+    const inputRequestTemplateNameContainer = document.querySelector("#input-template-name")
+    const inputRequestTextContainer = document.querySelector("#input-text");
+
+    const defaultTemplateName = "mensagem_apresentacao";
+
+    // Send message request
+		form.addEventListener("submit", (e) => {
+		  e.preventDefault();
+		  const formData = new FormData(e.target);
+		  const data = Object.fromEntries(formData.entries());
+      
+      const { type, to, text, name } = data;
+      const templateName = data["template-name"];
+      
+		  const messageOptions = 
+        type === "template" 
+          ? {
+              name: templateName,
+              language: { code: "pt_BR" },
+              components: [
+                {
+                  type: "body",
+                  parameters: [
+                    {
+                      type: "text",
+                      text: name,
+                    },
+                  ],
+                },
+              ],
+            } 
+          : {
+              body: text
+            };
+		  const body = {
+		    messaging_product: "whatsapp",
+		    type,
+		    to,
+		    [type]: messageOptions,
+		  };
+
+      postData(`${API_URL}/${PHONE_NUMBER_ID}/messages`, body);
+		});
+
+    // Manage inputs
+    selectRequestType.addEventListener("change", (e) => {
+      const type = e.target.value;
+      if (type === "text") {
+        inputRequestTemplateNameContainer.style.display = "none";
+        inputRequestNameContainer.style.display = "none"
+        inputRequestTextContainer.style.display = "block";
+      } else {
+        const templateName = inputRequestTemplateNameContainer.children[1].value;
+        if (templateName === defaultTemplateName) inputRequestNameContainer.style.display = "block"
+        inputRequestTextContainer.style.display = "none";
+        inputRequestTemplateNameContainer.style.display = "block";
+      }
+    });
+
+    inputRequestTemplateNameContainer.addEventListener("input", (e) => {
+      const templateName = e.target.value;
+      if (templateName === defaultTemplateName) {
+        inputRequestNameContainer.style.display = "block";
+      } else {
+        inputRequestNameContainer.style.display = "none";
+      }
+    });
+
+	</script>
+	<style>
+    body {
+      display: flex;
+      justify-content: center;
+    }
+		form {
+			display: flex;
+			flex-direction: column;
+			max-width: 250px;
+		}
+    #input-text {
+      display: none;
+    }
+	</style>
+</html>

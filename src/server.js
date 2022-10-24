@@ -1,9 +1,14 @@
 import "dotenv/config";
+import path from "node:path";
+import { fileURLToPath } from 'url';
 import express from "express";
 import morgan from "morgan";
 import brazilPhoneFormatter from "./utils/brazilPhoneFormatter.js";
 import errorHandling from "./utils/errorHandling.js";
 import api from "./api.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Environment variables
 const port = process.env.PORT || 4000;
@@ -14,13 +19,17 @@ const app = express();
 app.listen(port, () => console.log(`Server started at port ${port}`));
 
 // Middlewares
+app.use(express.static(path.join(__dirname, "..", "public")))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(errorHandling);
-app.use(morgan(":url :method :status :response-time ms"));
+app.use(morgan("dev"));
 
 // Routes
-app.get("/", (req, res) => res.send("Hello World!"));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
+// Establecer o webhook é opcional! Faça se quiser tratar as mensagens recebidas pelo número
 app.get("/webhook", (req, res, next) => {
 	const mode = req.query["hub.mode"];
 	const token = req.query["hub.verify_token"];
@@ -60,27 +69,6 @@ app.post("/webhook", async (req, res, next) => {
 		res.sendStatus(200);
 	} else {
 		res.sendStatus(404);
-	}
-});
-app.post("/send-message", async (req, res, next) => {
-	if (!req.body?.to) return res.sendStatus(400);
-
-	const { phoneNumbeId, to, type, data } = req.body;
-	if (type !== "template" && type !== "text") return res.sendStatus(400);
-
-	const senderPhoneId = phoneNumbeId || process.env.PHONE_NUMBER_ID;
-	console.log(senderPhoneId);
-	try {
-		await api.post(`${senderPhoneId}/messages`, {
-			messaging_product: "whatsapp",
-			type,
-			to,
-			[type]: data,
-		});
-
-		return res.sendStatus(200);
-	} catch (err) {
-		next(err);
 	}
 });
 
